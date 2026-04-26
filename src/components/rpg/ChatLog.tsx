@@ -6,7 +6,7 @@ import { NoteContent } from '@/components/NoteContent';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { ScrollArea, ScrollBar, ScrollbarThumb, ScrollbarTrack } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/useToast';
 
 export function ChatLog() {
@@ -15,13 +15,14 @@ export function ChatLog() {
   const [messages, setMessages] = useState<Array<any>>([]);
   const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(true);
-  const toast = useToast();
+  const { toast } = useToast();
 
   useEffect(() => {
-    if (user) {
-      loadChatMessages();
-      setupRealtimeUpdates();
-    }
+    if (!user) return;
+
+    loadChatMessages();
+    const cleanup = setupRealtimeUpdates();
+    return cleanup;
   }, [user, nostr]);
 
   const loadChatMessages = async () => {
@@ -66,12 +67,18 @@ export function ChatLog() {
       }
     ]);
 
-    subscription.on('event', (event) => {
-      setMessages(prev => [event, ...prev.slice(0, 49)]); // Keep last 50
-    });
+    let isActive = true;
+    (async () => {
+      for await (const msg of subscription) {
+        if (!isActive) break;
+        if (msg[0] === 'EVENT') {
+          setMessages(prev => [msg[2], ...prev.slice(0, 49)]); // Keep last 50
+        }
+      }
+    })();
 
     return () => {
-      subscription.close();
+      isActive = false;
     };
   };
 
@@ -104,7 +111,7 @@ export function ChatLog() {
       });
     } catch (error) {
       console.error('Failed to send message:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to send message',
         variant: 'destructive'

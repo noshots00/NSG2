@@ -15,10 +15,10 @@ export function CombatSystem() {
   const [enemyHP, setEnemyHP] = useState(100);
   const [playerMaxHP, setPlayerMaxHP] = useState(100);
   const [enemyMaxHP, setEnemyMaxHP] = useState(100);
-  [combatLog, setCombatLog] = useState<Array<string>>([]);
-  [isPlayerTurn, setIsPlayerTurn] = useState(true);
-  [loading, setLoading] = useState(false);
-  const toast = useToast();
+  const [combatLog, setCombatLog] = useState<Array<string>>([]);
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   // Load character data to get stats
   useEffect(() => {
@@ -172,7 +172,7 @@ export function CombatSystem() {
     
     // Update character with rewards (in real implementation)
     // For now, just log it
-    toast.create({
+    toast({
       title: 'Victory!',
       description: `You defeated the ${encounter.enemy} and gained rewards`,
       variant: 'default'
@@ -187,7 +187,7 @@ export function CombatSystem() {
     ]);
     
     // Penalties for defeat (lose some gold, etc.)
-    toast.create({
+    toast({
       title: 'Defeat',
       description: `You were defeated but managed to escape. You wake up in town.`,
       variant: 'destructive'

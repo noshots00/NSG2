@@ -10,7 +10,7 @@ export function TavernRumorBoard() {
   const { nostr } = useNostr();
   const [rumors, setRumors] = useState<Array<any>>([]);
   const [loading, setLoading] = useState(true);
-  const toast = useToast();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -77,7 +77,7 @@ export function TavernRumorBoard() {
       setLoading(false);
     } catch (error) {
       console.error('Failed to load rumors:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to load tavern rumors',
         variant: 'destructive'
@@ -123,14 +123,14 @@ export function TavernRumorBoard() {
         ]
       });
 
-      toast.create({
+      toast({
         title: 'Quest Accepted!',
         description: `You've accepted a quest to investigate the rumor`,
         variant: 'default'
       });
     } catch (error) {
       console.error('Failed to follow rumor:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to accept quest',
         variant: 'destructive'

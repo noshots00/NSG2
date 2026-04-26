@@ -21,7 +21,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
   const [characterClass, setCharacterClass] = useState('adventurer');
   const [background, setBackground] = useState('wanderer');
   const [loading, setLoading] = useState(false);
-  const toast = useToast();
+  const { toast } = useToast();
 
   const classes = [
     { id: 'adventurer', name: 'Adventurer', description: 'Balanced stats, versatile playstyle', icon: '⚔️' },
@@ -39,7 +39,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
 
   const handleCreateCharacter = async () => {
     if (!name.trim()) {
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Please enter a character name',
         variant: 'destructive'
@@ -147,7 +147,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
         ]
       });
 
-      toast.create({
+      toast({
         title: 'Character Created!',
         description: `Welcome to the world, ${name} the ${characterClass}!`,
         variant: 'default'
@@ -164,7 +164,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
       setBackground('wanderer');
     } catch (error) {
       console.error('Failed to create character:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to create character',
         variant: 'destructive'
@@ -214,7 +214,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
             <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Character Class
             </Label>
-            <div className="space-y-2">
+            <RadioGroup value={characterClass} onValueChange={setCharacterClass} className="space-y-2">
               {classes.map(cls => (
                 <RadioGroupItem 
                   key={cls.id} 
@@ -232,10 +232,12 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
                       </span>
                     </div>
                   </div>
-                  <RadioIndicator className="h-4 w-4" />
+                  <span className="h-4 w-4 flex items-center justify-center">
+                    <Circle className="h-2.5 w-2.5 fill-current text-current" />
+                  </span>
                 </RadioGroupItem>
               ))}
-            </div>
+            </RadioGroup>
           </div>
 
           {/* Background */}
@@ -243,7 +245,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
             <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Background
             </Label>
-            <div className="space-y-2">
+            <RadioGroup value={background} onValueChange={setBackground} className="space-y-2">
               {backgrounds.map(bg => (
                 <RadioGroupItem 
                   key={bg.id} 
@@ -286,7 +288,7 @@ export function CharacterCreation({ onCharacterCreated }: CharacterCreationProps
                    </span>
                 </RadioGroupItem>
               ))}
-            </div>
+            </RadioGroup>
           </div>
 
           {/* Preview */}

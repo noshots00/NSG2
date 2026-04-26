@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { Toast } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/useToast';
 
 export function InventoryScreen() {
@@ -16,7 +15,7 @@ export function InventoryScreen() {
   const [gold, setGold] = useState(0);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  const toast = useToast();
+  const { toast } = useToast();
 
   const loadCharacterData = async () => {
     try {
@@ -37,7 +36,7 @@ export function InventoryScreen() {
       setLoading(false);
     } catch (error) {
       console.error('Failed to load inventory:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to load inventory data',
         variant: 'destructive'
@@ -92,7 +91,7 @@ export function InventoryScreen() {
             ]
           });
           
-          toast.create({
+          toast({
             title: 'Item Used',
             description: `You used ${item.name}`,
             variant: 'default'
@@ -101,7 +100,7 @@ export function InventoryScreen() {
       }
     } catch (error) {
       console.error('Failed to use item:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to use item',
         variant: 'destructive'
@@ -139,7 +138,7 @@ export function InventoryScreen() {
           ]
         });
         
-        toast.create({
+        toast({
           title: 'Item Dropped',
           description: `You dropped ${item.name}`,
           variant: 'default'
@@ -147,7 +146,7 @@ export function InventoryScreen() {
       }
     } catch (error) {
       console.error('Failed to drop item:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to drop item',
         variant: 'destructive'

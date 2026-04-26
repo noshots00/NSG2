@@ -3,6 +3,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNostr } from '@nostrify/react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/useToast';
 
 export function QuestLog() {
@@ -12,7 +13,7 @@ export function QuestLog() {
   const [activeQuests, setActiveQuests] = useState<Array<any>>([]);
   const [completedQuests, setCompletedQuests] = useState<Array<any>>([]);
   const [loading, setLoading] = useState(true);
-  const toast = useToast();
+  const { toast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -40,7 +41,7 @@ export function QuestLog() {
       setLoading(false);
     } catch (error) {
       console.error('Failed to load quests:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to load quest data',
         variant: 'destructive'
@@ -85,7 +86,7 @@ export function QuestLog() {
           ]
         });
         
-        toast.create({
+        toast({
           title: 'Quest Completed!',
           description: 'You have completed a quest',
           variant: 'default'
@@ -93,7 +94,7 @@ export function QuestLog() {
       }
     } catch (error) {
       console.error('Failed to complete quest:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to complete quest',
         variant: 'destructive'
@@ -134,7 +135,7 @@ export function QuestLog() {
           ]
         });
         
-        toast.create({
+        toast({
           title: 'Quest Abandoned',
           description: 'You have abandoned this quest',
           variant: 'default'
@@ -142,7 +143,7 @@ export function QuestLog() {
       }
     } catch (error) {
       console.error('Failed to abandon quest:', error);
-      toast.create({
+      toast({
         title: 'Error',
         description: 'Failed to abandon quest',
         variant: 'destructive'
