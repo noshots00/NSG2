@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { loadGameData } from '@/lib/rpg/utils';
 
 export function CharacterSheet() {
   const { user } = useCurrentUser();
@@ -23,23 +24,14 @@ export function CharacterSheet() {
   const loadCharacter = async () => {
     try {
       setLoading(true);
-      const characterEvents = await nostr.query([
-        {
-          kinds: [3223], // Character Profile
-          authors: [user.pubkey],
-          limit: 1
-        }
-      ]);
+      const character = await loadGameData(nostr, user.pubkey);
 
-      if (characterEvents.length > 0) {
-        const characterEvent = characterEvents[0];
-        const character = JSON.parse(characterEvent.content);
+      if (character) {
         setCharacterData({
           ...character,
-          id: characterEvent.id,
-          level: parseInt(characterEvent.tags.find(tag => tag[0] === 'level')?.[1] || '1'),
-          class: characterEvent.tags.find(tag => tag[0] === 'class')?.[1] || 'adventurer',
-          xp: parseInt(characterEvent.tags.find(tag => tag[0] === 'xp')?.[1] || '0')
+          level: Number(character.level || 1),
+          class: character.class || 'adventurer',
+          xp: Number(character.xp || 0),
         });
       } else {
         setCharacterData(null);
